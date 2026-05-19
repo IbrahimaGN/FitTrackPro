@@ -4,7 +4,6 @@ import { HeaderComponent } from './layout/header/header';
 import { SidebarComponent } from './layout/sidebar/sidebar';
 
 @Component({
-  
   selector: 'app-root',
   standalone: true,
   imports: [RouterOutlet, HeaderComponent, SidebarComponent],
