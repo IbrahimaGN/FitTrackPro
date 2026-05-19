@@ -1,0 +1,120 @@
+<header class="fixed top-0 left-0 right-0 h-16 bg-white/95 backdrop-blur-md border-b border-gray-100 z-50 shadow-sm">
+  <div class="h-full px-6 flex items-center justify-between">
+
+    <!-- Logo -->
+    <div class="flex items-center gap-3">
+      <div class="w-9 h-9 bg-gradient-to-br from-violet-600 to-purple-700 rounded-xl flex items-center justify-center shadow-lg shadow-violet-200">
+        <span class="text-white font-black text-sm">FT</span>
+      </div>
+      <div>
+        <h1 class="text-lg font-black text-gray-900 leading-none">FitTrack <span class="text-violet-600">Pro</span></h1>
+        <p class="text-[10px] text-gray-400 font-medium">Complexe Sportif</p>
+      </div>
+    </div>
+
+    <!-- Actions -->
+    <div class="flex items-center gap-3">
+
+      <!-- Notifications -->
+      <div class="relative">
+        <button (click)="toggleNotifs()"
+          class="relative w-10 h-10 rounded-xl hover:bg-gray-50 flex items-center justify-center transition-colors border border-gray-100">
+          <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6 6 0 10-12 0v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/>
+          </svg>
+          @if (notifService.unreadCount() > 0) {
+            <span class="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] font-bold w-4 h-4 flex items-center justify-center rounded-full">
+              {{ notifService.unreadCount() }}
+            </span>
+          }
+        </button>
+
+        @if (showNotifs) {
+          <div class="absolute right-0 top-12 w-80 bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden z-50">
+            <div class="p-4 border-b border-gray-50 flex items-center justify-between">
+              <h3 class="font-semibold text-gray-800">Notifications</h3>
+              <span class="text-xs text-violet-600 font-medium cursor-pointer">Tout marquer lu</span>
+            </div>
+            <div class="max-h-64 overflow-y-auto">
+              @for (n of notifService.notifications(); track n.id) {
+                <div class="flex items-start gap-3 p-4 hover:bg-gray-50 transition-colors"
+                  [class.bg-violet-50]="!n.read">
+                  <div class="w-2 h-2 rounded-full mt-2 flex-shrink-0"
+                    [class.bg-violet-500]="n.type==='info'"
+                    [class.bg-green-500]="n.type==='success'"
+                    [class.bg-orange-500]="n.type==='warning'">
+                  </div>
+                  <div class="flex-1 min-w-0">
+                    <p class="text-sm text-gray-700">{{ n.message }}</p>
+                    <p class="text-xs text-gray-400 mt-1">{{ n.time }}</p>
+                  </div>
+                </div>
+              }
+            </div>
+          </div>
+        }
+      </div>
+
+      <!-- Cart -->
+      <div class="relative">
+        <button (click)="toggleCart()"
+          class="relative w-10 h-10 rounded-xl hover:bg-gray-50 flex items-center justify-center transition-colors border border-gray-100">
+          <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/>
+          </svg>
+          @if (cartService.totalCount() > 0) {
+            <span class="absolute -top-1 -right-1 bg-violet-600 text-white text-[10px] font-bold w-4 h-4 flex items-center justify-center rounded-full">
+              {{ cartService.totalCount() }}
+            </span>
+          }
+        </button>
+
+        @if (showCart) {
+          <div class="absolute right-0 top-12 w-72 bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden z-50">
+            <div class="p-4 border-b border-gray-50">
+              <h3 class="font-semibold text-gray-800">Panier ({{ cartService.totalCount() }})</h3>
+            </div>
+            @if (cartService.cartItems().length === 0) {
+              <div class="p-6 text-center text-gray-400 text-sm">Panier vide</div>
+            } @else {
+              <div class="max-h-48 overflow-y-auto">
+                @for (item of cartService.cartItems(); track item.product.id) {
+                  <div class="flex items-center gap-3 p-3 hover:bg-gray-50">
+                    <span class="text-2xl">{{ item.product.image }}</span>
+                    <div class="flex-1 min-w-0">
+                      <p class="text-sm font-medium text-gray-800 truncate">{{ item.product.nom }}</p>
+                      <p class="text-xs text-gray-400">x{{ item.quantity }} • {{ (item.product.prix * item.quantity).toLocaleString() }} FCFA</p>
+                    </div>
+                    <button (click)="cartService.removeFromCart(item.product.id)" class="text-red-400 hover:text-red-600">✕</button>
+                  </div>
+                }
+              </div>
+              <div class="p-4 border-t border-gray-50 bg-gray-50">
+                <div class="flex justify-between mb-3">
+                  <span class="text-sm text-gray-600">Total</span>
+                  <span class="font-bold text-violet-700">{{ cartService.totalPrice().toLocaleString() }} FCFA</span>
+                </div>
+                <button (click)="cartService.clearCart()"
+                  class="w-full bg-violet-600 hover:bg-violet-700 text-white text-sm font-semibold py-2 rounded-xl transition-colors">
+                  Commander
+                </button>
+              </div>
+            }
+          </div>
+        }
+      </div>
+
+      <!-- Avatar -->
+      <div class="flex items-center gap-3 pl-3 border-l border-gray-100">
+        <img src="https://i.pravatar.cc/40?img=12" alt="avatar" class="w-9 h-9 rounded-xl object-cover ring-2 ring-violet-100"/>
+        <div class="hidden md:block">
+          <p class="text-sm font-semibold text-gray-800 leading-none">Khaliloulah</p>
+          <p class="text-xs text-gray-400">Admin</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</header>

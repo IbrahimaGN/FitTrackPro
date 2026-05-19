@@ -1,0 +1,71 @@
+<div class="space-y-6">
+
+  <div>
+    <h1 class="text-2xl font-black text-gray-900">Planning & Réservations</h1>
+    <!-- <p class="text-gray-500 text-sm mt-0.5">
+      <span class="bg-violet-100 text-violet-700 px-2 py-0.5 rounded font-mono text-xs font-semibold">signal() + computed()</span>
+      Places restantes calculées en temps réel
+    </p> -->
+  </div>
+
+  <!-- Grille par jour -->
+  <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
+    @for (jour of jours; track jour) {
+      <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+        <div class="px-5 py-3 border-b border-gray-100 bg-gray-50">
+          <h2 class="font-bold text-gray-800 text-sm">{{ jour }}</h2>
+        </div>
+        <div class="p-4 space-y-3">
+          @for (c of getCoursByJour(jour); track c.id) {
+            <div class="rounded-xl border p-3 transition-all" [class]="getColorClasses(c.couleur).card">
+              <div class="flex items-start justify-between mb-2">
+                <div class="flex items-center gap-2">
+                  <span class="text-2xl">{{ c.emoji }}</span>
+                  <div>
+                    <p class="font-bold text-gray-800 text-sm">{{ c.nom }}</p>
+                    <p class="text-xs text-gray-500">{{ c.instructeur }}</p>
+                  </div>
+                </div>
+                <span class="text-xs font-semibold px-2 py-1 rounded-lg" [class]="getColorClasses(c.couleur).badge">
+                  {{ c.heure }}
+                </span>
+              </div>
+
+              <!-- Places - Signal réactif -->
+              <div class="flex items-center justify-between mt-3">
+                <div class="flex-1 mr-3">
+                  <div class="flex justify-between text-xs mb-1">
+                    <span class="text-gray-500">{{ c.inscrits() }}/{{ c.capacite }} places</span>
+                    @if (estComplet(c)) {
+                      <span class="text-red-600 font-bold">COMPLET</span>
+                    } @else {
+                      <span class="text-gray-500">{{ placesRestantes(c) }} dispo</span>
+                    }
+                  </div>
+                  <div class="w-full bg-white rounded-full h-1.5">
+                    <div class="h-1.5 rounded-full transition-all duration-300"
+                      [class.bg-red-500]="estComplet(c)"
+                      [class.bg-green-500]="!estComplet(c)"
+                      [style.width]="(c.inscrits() / c.capacite * 100) + '%'">
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Module 3 Challenge: bouton désactivé via computed si complet -->
+                <button (click)="reserver(c)"
+                  [disabled]="estComplet(c)"
+                  class="text-white text-xs font-semibold px-3 py-1.5 rounded-lg transition-all"
+                  [class]="estComplet(c) ? 'bg-gray-300 cursor-not-allowed' : getColorClasses(c.couleur).btn">
+                  {{ estComplet(c) ? 'Complet' : 'Réserver' }}
+                </button>
+              </div>
+            </div>
+          } @empty {
+            <p class="text-sm text-gray-400 text-center py-4">Aucun cours ce jour</p>
+          }
+        </div>
+      </div>
+    }
+  </div>
+
+</div>

@@ -1,0 +1,152 @@
+<div class="space-y-6">
+
+  <div>
+    <h1 class="text-2xl font-black text-gray-900">🥗 Calculateur Nutritionnel</h1>
+    <!-- <p class="text-gray-500 text-sm mt-0.5">
+      <span class="bg-violet-100 text-violet-700 px-2 py-0.5 rounded font-mono text-xs font-semibold">effect()</span>
+      Mise à jour instantanée avec log automatique
+    </p> -->
+  </div>
+
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+
+    <!-- Formulaire sliders -->
+    <div class="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 space-y-5">
+      <h2 class="font-bold text-gray-900">Votre profil</h2>
+
+      <!-- Sexe -->
+      <div>
+        <label class="block text-sm font-semibold text-gray-700 mb-3">Sexe</label>
+        <div class="flex gap-3">
+          @for (s of [{ val: 'homme', label: '👨 Homme' }, { val: 'femme', label: '👩 Femme' }]; track s.val) {
+            <button (click)="sexe.set(s.val === 'homme' ? 'homme' : 'femme')"
+              class="flex-1 py-2.5 rounded-xl border-2 text-sm font-semibold transition-all"
+              [class.border-violet-500]="sexe() === s.val"
+              [class.bg-violet-50]="sexe() === s.val"
+              [class.text-violet-700]="sexe() === s.val"
+              [class.border-gray-200]="sexe() !== s.val"
+              [class.text-gray-600]="sexe() !== s.val">
+              {{ s.label }}
+            </button>
+          }
+        </div>
+      </div>
+
+      <!-- Poids slider -->
+      <div>
+        <div class="flex justify-between mb-2">
+          <label class="text-sm font-semibold text-gray-700">Poids</label>
+          <span class="text-sm font-bold text-violet-600">{{ poids() }} kg</span>
+        </div>
+        <input type="range" [ngModel]="poids()" (ngModelChange)="poids.set(+$event)"
+          min="40" max="150" step="1"
+          class="w-full h-2 bg-gray-200 rounded-full appearance-none cursor-pointer accent-violet-600"/>
+        <div class="flex justify-between text-xs text-gray-400 mt-1"><span>40 kg</span><span>150 kg</span></div>
+      </div>
+
+      <!-- Taille slider -->
+      <div>
+        <div class="flex justify-between mb-2">
+          <label class="text-sm font-semibold text-gray-700">Taille</label>
+          <span class="text-sm font-bold text-violet-600">{{ taille() }} cm</span>
+        </div>
+        <input type="range" [ngModel]="taille()" (ngModelChange)="taille.set(+$event)"
+          min="140" max="220" step="1"
+          class="w-full h-2 bg-gray-200 rounded-full appearance-none cursor-pointer accent-violet-600"/>
+        <div class="flex justify-between text-xs text-gray-400 mt-1"><span>140 cm</span><span>220 cm</span></div>
+      </div>
+
+      <!-- Âge slider -->
+      <div>
+        <div class="flex justify-between mb-2">
+          <label class="text-sm font-semibold text-gray-700">Âge</label>
+          <span class="text-sm font-bold text-violet-600">{{ age() }} ans</span>
+        </div>
+        <input type="range" [ngModel]="age()" (ngModelChange)="age.set(+$event)"
+          min="16" max="80" step="1"
+          class="w-full h-2 bg-gray-200 rounded-full appearance-none cursor-pointer accent-violet-600"/>
+        <div class="flex justify-between text-xs text-gray-400 mt-1"><span>16 ans</span><span>80 ans</span></div>
+      </div>
+
+      <!-- Activité -->
+      <div>
+        <label class="block text-sm font-semibold text-gray-700 mb-2">Niveau d'activité</label>
+        <select [ngModel]="activite()" (ngModelChange)="activite.set(+$event)"
+          class="w-full px-4 py-2.5 rounded-xl border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-violet-200 bg-white">
+          @for (n of niveauxActivite; track n.value) {
+            <option [value]="n.value">{{ n.label }}</option>
+          }
+        </select>
+      </div>
+    </div>
+
+    <!-- Résultats -->
+    <div class="space-y-4">
+
+      <!-- Calories -->
+      <div class="bg-gradient-to-br from-violet-600 to-purple-700 rounded-2xl p-6 text-white shadow-lg shadow-violet-200">
+        <p class="text-violet-200 text-sm font-medium mb-1">Besoins caloriques journaliers</p>
+        <p class="text-5xl font-black">{{ calories() }}</p>
+        <p class="text-violet-200 mt-1">kcal / jour</p>
+      </div>
+
+      <!-- IMC -->
+      <div class="bg-white rounded-2xl p-5 shadow-sm border border-gray-100">
+        <div class="flex items-center justify-between">
+          <div>
+            <p class="text-sm text-gray-500">IMC</p>
+            <p class="text-3xl font-black text-gray-900 mt-1">{{ imc() }}</p>
+          </div>
+          <span class="px-3 py-1.5 rounded-full text-sm font-semibold"
+            [class.bg-emerald-100]="imcLabel().color === 'emerald'"
+            [class.text-emerald-700]="imcLabel().color === 'emerald'"
+            [class.bg-amber-100]="imcLabel().color === 'amber'"
+            [class.text-amber-700]="imcLabel().color === 'amber'"
+            [class.bg-red-100]="imcLabel().color === 'red'"
+            [class.text-red-700]="imcLabel().color === 'red'"
+            [class.bg-blue-100]="imcLabel().color === 'blue'"
+            [class.text-blue-700]="imcLabel().color === 'blue'">
+            {{ imcLabel().label }}
+          </span>
+        </div>
+      </div>
+
+      <!-- Macros -->
+      <div class="bg-white rounded-2xl p-5 shadow-sm border border-gray-100">
+        <h3 class="font-bold text-gray-900 mb-4">Macronutriments recommandés</h3>
+        <div class="grid grid-cols-3 gap-3">
+          <div class="text-center p-3 bg-blue-50 rounded-xl">
+            <p class="text-xs text-blue-500 font-medium mb-1">Protéines</p>
+            <p class="text-2xl font-black text-blue-700">{{ proteines() }}</p>
+            <p class="text-xs text-blue-400">g/jour</p>
+          </div>
+          <div class="text-center p-3 bg-amber-50 rounded-xl">
+            <p class="text-xs text-amber-500 font-medium mb-1">Glucides</p>
+            <p class="text-2xl font-black text-amber-700">{{ glucides() }}</p>
+            <p class="text-xs text-amber-400">g/jour</p>
+          </div>
+          <div class="text-center p-3 bg-green-50 rounded-xl">
+            <p class="text-xs text-green-500 font-medium mb-1">Lipides</p>
+            <p class="text-2xl font-black text-green-700">{{ lipides() }}</p>
+            <p class="text-xs text-green-400">g/jour</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Log effect() -->
+      <div class="bg-gray-950 rounded-2xl p-4 border border-gray-800">
+        <div class="flex items-center gap-2 mb-3">
+          <div class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+          <p class="text-xs font-mono text-green-400 font-bold">console des changements</p>
+        </div>
+        <div class="space-y-1 max-h-32 overflow-y-auto">
+          @for (entry of log(); track $index) {
+            <p class="text-xs font-mono text-gray-400">{{ entry }}</p>
+          }
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</div>

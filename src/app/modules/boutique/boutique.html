@@ -1,0 +1,78 @@
+<div class="space-y-6">
+
+  <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+    <div>
+      <h1 class="text-2xl font-black text-gray-900">🛒 Boutique</h1>
+      <p class="text-gray-500 text-sm mt-0.5">
+        <!-- <span class="bg-violet-100 text-violet-700 px-2 py-0.5 rounded font-mono text-xs">inject()</span> -->
+        Panier partagé via service global
+      </p>
+    </div>
+
+    <!-- Cart Summary -->
+    <div class="flex items-center gap-3 bg-white rounded-2xl px-4 py-3 shadow-sm border border-gray-100">
+      <span class="text-xl">🛒</span>
+      <div>
+        <p class="text-sm font-bold text-gray-800">{{ cartService.totalCount() }} article(s)</p>
+        <p class="text-xs text-violet-600 font-semibold">{{ cartService.totalPrice().toLocaleString() }} FCFA</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Filters -->
+  <div class="flex gap-2 flex-wrap">
+    @for (cat of categories; track cat.val) {
+      <button (click)="filterCat.set(cat.val)"
+        class="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold transition-all border"
+        [class.bg-violet-600]="filterCat() === cat.val"
+        [class.text-white]="filterCat() === cat.val"
+        [class.border-violet-600]="filterCat() === cat.val"
+        [class.shadow-lg]="filterCat() === cat.val"
+        [class.shadow-violet-200]="filterCat() === cat.val"
+        [class.bg-white]="filterCat() !== cat.val"
+        [class.text-gray-700]="filterCat() !== cat.val"
+        [class.border-gray-200]="filterCat() !== cat.val">
+        {{ cat.emoji }} {{ cat.label }}
+      </button>
+    }
+  </div>
+
+  <!-- Products Grid -->
+  <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-5">
+    @for (p of filteredProduits(); track p.id) {
+      <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition-all hover:-translate-y-0.5">
+        <div class="bg-gradient-to-br from-gray-50 to-gray-100 p-8 text-center text-5xl">
+          {{ p.image }}
+        </div>
+        <div class="p-4">
+          <div class="flex items-start justify-between mb-2">
+            <h3 class="font-bold text-gray-800 text-sm leading-tight">{{ p.nom }}</h3>
+            <span class="text-xs text-amber-500 font-bold ml-2 flex-shrink-0">⭐ {{ p.note }}</span>
+          </div>
+          <p class="text-xs text-gray-400 mb-3">{{ p.description }}</p>
+
+          <div class="flex items-center justify-between mb-3">
+            <span class="text-lg font-black text-violet-700">{{ p.prix.toLocaleString() }}</span>
+            <span class="text-xs text-gray-400">FCFA</span>
+          </div>
+
+          <div class="flex items-center justify-between">
+            <span class="text-xs text-gray-400">{{ p.stock }} en stock</span>
+            <button (click)="cartService.addToCart(p)"
+              class="flex items-center gap-1.5 text-xs font-bold px-3 py-2 rounded-xl transition-all"
+              [class.bg-violet-600]="!inCart(p.id)"
+              [class.hover:bg-violet-700]="!inCart(p.id)"
+              [class.text-white]="!inCart(p.id)"
+              [class.shadow-lg]="!inCart(p.id)"
+              [class.shadow-violet-200]="!inCart(p.id)"
+              [class.bg-emerald-50]="inCart(p.id)"
+              [class.text-emerald-700]="inCart(p.id)">
+              {{ inCart(p.id) ? '✓ Ajouté' : '+ Panier' }}
+            </button>
+          </div>
+        </div>
+      </div>
+    }
+  </div>
+
+</div>

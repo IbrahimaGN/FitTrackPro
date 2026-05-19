@@ -1,0 +1,119 @@
+<div class="space-y-6">
+
+  <div>
+    <h1 class="text-2xl font-black text-gray-900">💬 Communauté</h1>
+    <p class="text-gray-500 text-sm mt-0.5">
+      <span class="bg-violet-100 text-violet-700 px-2 py-0.5 rounded font-mono text-xs font-semibold">toSignal()</span>
+      Flux RxJS transformé en Signal pour le ticker
+    </p>
+  </div>
+
+  <!-- Ticker - toSignal() en action -->
+  <div class="bg-gradient-to-r from-violet-600 to-purple-700 rounded-2xl px-5 py-3 flex items-center gap-3">
+    <span class="text-white text-lg flex-shrink-0">📡</span>
+    <div class="flex-1 overflow-hidden">
+      <p class="text-white text-sm font-medium transition-all">{{ currentTicker() }}</p>
+    </div>
+    <!-- <span class="text-violet-300 text-xs font-mono flex-shrink-0">toSignal(interval(4s))</span> -->
+  </div>
+
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+    <!-- Feed -->
+    <div class="lg:col-span-2 space-y-4">
+
+      <!-- Composer -->
+      <div class="bg-white rounded-2xl p-4 shadow-sm border border-gray-100">
+        <div class="flex items-start gap-3">
+          <img src="https://i.pravatar.cc/40?img=12" class="w-10 h-10 rounded-xl object-cover flex-shrink-0"/>
+          <div class="flex-1">
+            <textarea [ngModel]="newMessage()" (ngModelChange)="newMessage.set($event)"
+              placeholder="Partagez vos victoires, conseils ou questions..."
+              rows="3"
+              class="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-violet-200 resize-none bg-gray-50">
+            </textarea>
+            <div class="flex justify-end mt-2">
+              <button (click)="sendMessage()"
+                [disabled]="!newMessage().trim()"
+                class="bg-violet-600 hover:bg-violet-700 disabled:bg-gray-300 disabled:cursor-not-allowed text-white text-sm font-bold px-5 py-2 rounded-xl transition-colors">
+                Publier →
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Posts - @for avec Signals -->
+      @for (post of posts(); track post.id) {
+        <div class="bg-white rounded-2xl p-5 shadow-sm border border-gray-100 hover:shadow-md transition-all">
+          <div class="flex items-start gap-3 mb-3">
+            <img [src]="post.avatar" class="w-10 h-10 rounded-xl object-cover flex-shrink-0"/>
+            <div class="flex-1">
+              <div class="flex items-center gap-2 flex-wrap">
+                <p class="font-bold text-gray-800 text-sm">{{ post.auteur }}</p>
+                <span class="text-xs bg-violet-50 text-violet-600 px-2 py-0.5 rounded-full">{{ post.badge }}</span>
+              </div>
+              <p class="text-xs text-gray-400 mt-0.5">{{ post.time }}</p>
+            </div>
+          </div>
+          <p class="text-gray-700 text-sm leading-relaxed">{{ post.message }}</p>
+          <div class="flex items-center gap-4 mt-4 pt-3 border-t border-gray-50">
+            <button (click)="addLike(post)"
+              class="flex items-center gap-1.5 text-sm text-gray-400 hover:text-violet-600 transition-colors">
+              <span>❤️</span>
+              <span class="font-semibold">{{ post.likes() }}</span>
+            </button>
+            <button class="flex items-center gap-1.5 text-sm text-gray-400 hover:text-blue-600 transition-colors">
+              <span>💬</span>
+              <span>Répondre</span>
+            </button>
+          </div>
+        </div>
+      }
+
+    </div>
+
+    <!-- Sidebar stats -->
+    <div class="space-y-4">
+      <div class="bg-white rounded-2xl p-5 shadow-sm border border-gray-100">
+        <h3 class="font-bold text-gray-900 mb-4">🏆 Top membres du mois</h3>
+        <div class="space-y-3">
+          @for (m of [
+            { name: 'Ibrahima Ba', points: 2450, avatar: 'https://i.pravatar.cc/40?img=8', medal: '🥇' },
+            { name: 'Fatou Sow', points: 1890, avatar: 'https://i.pravatar.cc/40?img=5', medal: '🥈' },
+            { name: 'Moussa Diallo', points: 1650, avatar: 'https://i.pravatar.cc/40?img=3', medal: '🥉' },
+          ]; track m.name) {
+            <div class="flex items-center gap-3">
+              <span class="text-xl">{{ m.medal }}</span>
+              <img [src]="m.avatar" class="w-8 h-8 rounded-xl object-cover"/>
+              <div class="flex-1 min-w-0">
+                <p class="text-sm font-semibold text-gray-800 truncate">{{ m.name }}</p>
+                <p class="text-xs text-gray-400">{{ m.points }} pts</p>
+              </div>
+            </div>
+          }
+        </div>
+      </div>
+
+      <div class="bg-white rounded-2xl p-5 shadow-sm border border-gray-100">
+        <h3 class="font-bold text-gray-900 mb-4">📊 Activité cette semaine</h3>
+        <div class="space-y-3">
+          <div class="flex justify-between text-sm">
+            <span class="text-gray-500">Posts publiés</span>
+            <span class="font-bold text-gray-800">{{ posts().length }}</span>
+          </div>
+          <div class="flex justify-between text-sm">
+            <span class="text-gray-500">Membres actifs</span>
+            <span class="font-bold text-gray-800">47</span>
+          </div>
+          <div class="flex justify-between text-sm">
+            <span class="text-gray-500">Défi en cours</span>
+            <span class="font-bold text-emerald-600">30j Burpees</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</div>

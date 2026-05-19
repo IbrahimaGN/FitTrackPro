@@ -1,0 +1,46 @@
+<aside class="fixed top-16 left-0 w-64 h-[calc(100vh-4rem)] bg-gray-950 flex flex-col z-40 border-r border-gray-800">
+
+  <!-- Gym Info -->
+  <div class="p-5 border-b border-gray-800">
+    <div class="flex items-center gap-3">
+      <div class="w-10 h-10 bg-gradient-to-br from-violet-500 to-purple-700 rounded-xl flex items-center justify-center">
+        <span class="text-xl">🏋️</span>
+      </div>
+      <div>
+        <p class="text-white font-bold text-sm leading-none">FitTrack Pro</p>
+        <div class="flex items-center gap-1.5 mt-1">
+          <div class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+          <span class="text-green-400 text-xs font-medium">Ouvert</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Navigation -->
+  <nav class="flex-1 overflow-y-auto p-3 space-y-1">
+    @for (item of navItems; track item.route) {
+      <a [routerLink]="item.route" routerLinkActive="bg-violet-600 text-white shadow-lg shadow-violet-900/30"
+        [routerLinkActiveOptions]="{exact: true}"
+        class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-gray-400 hover:bg-gray-800 hover:text-white transition-all duration-200 group">
+        <span class="text-lg w-6 text-center">{{ item.icon }}</span>
+        <span class="text-sm font-medium flex-1">{{ item.label }}</span>
+        @if (item.badge) {
+          <span class="bg-violet-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full">{{ item.badge }}</span>
+        }
+      </a>
+    }
+  </nav>
+
+  <!-- Footer -->
+  <div class="p-4 border-t border-gray-800">
+    <div class="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-gray-800 cursor-pointer transition-colors">
+      <span class="text-lg">⚙️</span>
+      <span class="text-gray-400 text-sm font-medium">Paramètres</span>
+    </div>
+    <div class="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-gray-800 cursor-pointer transition-colors mt-1">
+      <span class="text-lg">🚪</span>
+      <span class="text-gray-400 text-sm font-medium">Déconnexion</span>
+    </div>
+  </div>
+
+</aside>

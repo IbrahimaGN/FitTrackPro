@@ -1,0 +1,151 @@
+<div class="space-y-6">
+
+  <!-- Page Header -->
+  <div class="flex items-center justify-between">
+    <div>
+      <h1 class="text-2xl font-black text-gray-900">Tableau de bord</h1>
+      <p class="text-gray-500 mt-0.5">Bienvenue sur <strong class="text-violet-600">{{ gymName() }}</strong></p>
+    </div>
+    <div class="flex items-center gap-2">
+      <input [ngModel]="gymName()"
+        (ngModelChange)="gymName.set($event)"
+        placeholder="Nom de la salle"
+        class="px-3 py-2 text-sm border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-violet-300 bg-white"/>
+    </div>
+  </div>
+
+  <!-- Stats Cards -->
+  <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-5">
+
+    <div class="bg-white rounded-2xl p-5 shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
+      <div class="flex items-center justify-between mb-4">
+        <div class="w-11 h-11 bg-violet-100 rounded-xl flex items-center justify-center text-xl">👥</div>
+        <span class="text-xs font-semibold text-green-600 bg-green-50 px-2 py-1 rounded-full">+12%</span>
+      </div>
+      <p class="text-2xl font-black text-gray-900">245</p>
+      <p class="text-sm text-gray-500 mt-1">Adhérents actifs</p>
+    </div>
+
+    <div class="bg-white rounded-2xl p-5 shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
+      <div class="flex items-center justify-between mb-4">
+        <div class="w-11 h-11 bg-emerald-100 rounded-xl flex items-center justify-center text-xl">💰</div>
+        <span class="text-xs font-semibold text-green-600 bg-green-50 px-2 py-1 rounded-full">+8%</span>
+      </div>
+      <p class="text-2xl font-black text-gray-900">50 000</p>
+      <p class="text-sm text-gray-500 mt-1">Cotisations (FCFA)</p>
+    </div>
+
+    <div class="bg-white rounded-2xl p-5 shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
+      <div class="flex items-center justify-between mb-4">
+        <div class="w-11 h-11 bg-blue-100 rounded-xl flex items-center justify-center text-xl">📅</div>
+        <span class="text-xs font-semibold text-blue-600 bg-blue-50 px-2 py-1 rounded-full">6 à venir</span>
+      </div>
+      <p class="text-2xl font-black text-gray-900">4</p>
+      <p class="text-sm text-gray-500 mt-1">Événements ce mois</p>
+    </div>
+
+    <div class="bg-white rounded-2xl p-5 shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
+      <div class="flex items-center justify-between mb-4">
+        <div class="w-11 h-11 bg-orange-100 rounded-xl flex items-center justify-center text-xl">📋</div>
+        <span class="text-xs font-semibold text-orange-600 bg-orange-50 px-2 py-1 rounded-full">5 en attente</span>
+      </div>
+      <p class="text-2xl font-black text-gray-900">8</p>
+      <p class="text-sm text-gray-500 mt-1">Demandes</p>
+    </div>
+
+  </div>
+
+  <!-- Charts Row -->
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-5">
+
+    <!-- Bar Chart -->
+    <div class="lg:col-span-2 bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
+      <div class="flex items-center justify-between mb-6">
+        <div>
+          <h2 class="font-bold text-gray-900">Évolution des adhérents</h2>
+          <p class="text-xs text-gray-400 mt-0.5">Nouveaux membres par mois</p>
+        </div>
+        <select
+          [ngModel]="anneeSelectionnee()"
+          (ngModelChange)="anneeSelectionnee.set(+$event)"
+          class="text-xs font-medium text-violet-600 bg-violet-50 px-3 py-1.5 rounded-full border-0 cursor-pointer focus:outline-none focus:ring-2 focus:ring-violet-200">
+          @for (a of annees; track a) {
+            <option [value]="a">{{ a }}</option>
+          }
+        </select>
+      </div>
+      <div class="flex items-end gap-1 h-44 mt-2">
+        @for (d of chartData(); track d.month) {
+          <div class="flex-1 flex flex-col items-center gap-1">
+            <span class="text-[10px] font-semibold text-gray-700">{{ d.value }}</span>
+            <div class="w-full rounded-t-lg bg-gradient-to-t from-violet-600 to-violet-400 transition-all duration-500 hover:from-violet-700 hover:to-violet-500 min-h-[4px]"
+              [style.height]="getBarHeight(d.value)">
+            </div>
+            <span class="text-[10px] text-gray-400">{{ d.month }}</span>
+          </div>
+        }
+      </div>
+    </div>
+
+    <!-- Répartition statuts -->
+    <div class="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
+      <h2 class="font-bold text-gray-900 mb-6">Répartition statuts</h2>
+      <div class="space-y-4">
+        <div>
+          <div class="flex justify-between text-sm mb-1.5">
+            <span class="text-gray-600 flex items-center gap-2"><span class="w-2.5 h-2.5 bg-emerald-500 rounded-full"></span>Actifs</span>
+            <span class="font-bold text-gray-800">70%</span>
+          </div>
+          <div class="w-full bg-gray-100 rounded-full h-2.5">
+            <div class="bg-gradient-to-r from-emerald-500 to-emerald-400 h-2.5 rounded-full" style="width:70%"></div>
+          </div>
+        </div>
+        <div>
+          <div class="flex justify-between text-sm mb-1.5">
+            <span class="text-gray-600 flex items-center gap-2"><span class="w-2.5 h-2.5 bg-amber-500 rounded-full"></span>En attente</span>
+            <span class="font-bold text-gray-800">20%</span>
+          </div>
+          <div class="w-full bg-gray-100 rounded-full h-2.5">
+            <div class="bg-gradient-to-r from-amber-500 to-amber-400 h-2.5 rounded-full" style="width:20%"></div>
+          </div>
+        </div>
+        <div>
+          <div class="flex justify-between text-sm mb-1.5">
+            <span class="text-gray-600 flex items-center gap-2"><span class="w-2.5 h-2.5 bg-red-500 rounded-full"></span>Inactifs</span>
+            <span class="font-bold text-gray-800">10%</span>
+          </div>
+          <div class="w-full bg-gray-100 rounded-full h-2.5">
+            <div class="bg-gradient-to-r from-red-500 to-red-400 h-2.5 rounded-full" style="width:10%"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Recent Members -->
+  <div class="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
+    <div class="flex items-center justify-between mb-5">
+      <h2 class="font-bold text-gray-900">Dernières inscriptions</h2>
+      <a routerLink="/adherents" class="text-sm text-violet-600 hover:text-violet-700 font-medium">Voir tout →</a>
+    </div>
+    <div class="space-y-3">
+      @for (m of recentMembers; track m.name) {
+        <div class="flex items-center gap-4 p-3 rounded-xl hover:bg-gray-50 transition-colors">
+          <img [src]="m.avatar" class="w-10 h-10 rounded-xl object-cover"/>
+          <div class="flex-1">
+            <p class="font-semibold text-gray-800 text-sm">{{ m.name }}</p>
+            <p class="text-xs text-gray-400">{{ m.time }}</p>
+          </div>
+          <span class="text-xs font-semibold px-3 py-1.5 rounded-full"
+            [class]="m.type === 'VIP' ? 'bg-amber-50 text-amber-700' :
+                     m.type === 'Premium' ? 'bg-violet-50 text-violet-700' :
+                     'bg-gray-100 text-gray-600'">
+            {{ m.type }}
+          </span>
+        </div>
+      }
+    </div>
+  </div>
+
+</div>
